@@ -1,0 +1,265 @@
+---
+title: "Final Project Data Tools"
+output:
+  pdf_document: default
+  html_document: default
+date: "2023-01-25"
+---
+
+```{r setup, include=FALSE}
+rm(list = ls())
+
+library(tidyverse)
+library(dplyr)
+library(ggplot2)
+library(readr)
+library(readxl)
+
+setwd("C:\\Users\\hugog\\Desktop\\SALLE URL\\DATA ANALYSIS TOOLS\\DATASETS")
+#Add all the csv
+December <- read_csv("2022_12_Desembre_qualitat_aire_BCN.csv")
+Gener <- read_csv("2022_01_Gener_qualitat_aire_BCN.csv")
+Febrer <- read_csv("2022_02_Febrer_qualitat_aire_BCN.csv")
+Marc <- read_csv("2022_03_Marc_qualitat_aire_BCN.csv")
+Abril <- read_csv("2022_04_Abril_qualitat_aire_BCN.csv")
+Maig <- read_csv("2022_05_Maig_qualitat_aire_BCN.csv") 
+Juny <- read_csv("2022_06_Juny_qualitat_aire_BCN.csv")
+Juliol <- read_csv("2022_07_Juliol_qualitat_aire_BCN.csv")
+Agost <- read_csv("2022_08_Agost_qualitat_aire_BCN.csv")
+Setembre <- read_csv("2022_09_Setembre_qualitat_aire_BCN.csv")
+Octubre <- read_csv("2022_10_Octubre_qualitat_aire_BCN.csv")
+Novembre <- read_csv("2022_11_Novembre_qualitat_aire_BCN.csv")
+
+#Joining all the data of each month in the same dataset
+trial <- full_join(Gener, December)
+joining <- full_join(trial, Febrer)
+joining <- full_join(joining, Marc)
+joining <- full_join(joining, Abril)
+joining <- full_join(joining, Maig)
+joining <- full_join(joining, Juny)
+joining <- full_join(joining, Juliol)
+joining <- full_join(joining, Agost)
+joining <- full_join(joining, Setembre)
+joining <- full_join(joining, Octubre)
+FullJoined <- full_join(joining, Novembre)
+
+#Here we add the csv of all the trees and the size of each neighborhood
+trees <- read.csv("OD_Arbrat_Parcs_BCN.csv")
+Street <- read.csv("OD_Arbrat_Viari_BCN.csv")
+Size_neigh<- read.csv("neighbourhood_size.csv")
+
+#Join trees of the parks and trees of the street
+
+Total_Trees <- full_join(trees, Street)
+
+
+#Add size of the neighbourhoods to the Total_Trees dataset
+
+Total_Trees <- full_join(Total_Trees, Size_neigh)
+
+                                  
+#Create a new column with the desity of trees per neighbourhood
+
+Total_trees2 <- Total_Trees %>%
+  group_by(codi_barri) %>%
+  mutate(Trees_barri = sum(codi_barri != "0"))
+
+Total_trees2 <- transform(Total_trees2, Trees_density = round(Trees_barri / as.numeric(size),2)) #We divide the number of trees of each neighbourhood with the size of each neighbourhood
+
+
+
+#Here we create a dataset with ESTACIO, MUNICIPI, ANY, MES, DIA, HORA, VALOR from FullJoined for each H
+
+H01 <- transmute(FullJoined, ESTACIO, MUNICIPI, ANY, MES, DIA, HORA = 01, VALOR = H01)
+H02 <- transmute(FullJoined, ESTACIO, MUNICIPI, ANY, MES, DIA, HORA = 02, VALOR = H02)
+H03 <- transmute(FullJoined, ESTACIO, MUNICIPI, ANY, MES, DIA, HORA = 03, VALOR = H03)
+H04 <- transmute(FullJoined, ESTACIO, MUNICIPI, ANY, MES, DIA, HORA = 04, VALOR = H04)
+H05 <- transmute(FullJoined, ESTACIO, MUNICIPI, ANY, MES, DIA, HORA = 05, VALOR = H05)
+H06 <- transmute(FullJoined, ESTACIO, MUNICIPI, ANY, MES, DIA, HORA = 06, VALOR = H06)
+H07 <- transmute(FullJoined, ESTACIO, MUNICIPI, ANY, MES, DIA, HORA = 07, VALOR = H07)
+H08 <- transmute(FullJoined, ESTACIO, MUNICIPI, ANY, MES, DIA, HORA = 08, VALOR = H08)
+H09 <- transmute(FullJoined, ESTACIO, MUNICIPI, ANY, MES, DIA, HORA = 09, VALOR = H09)
+H10 <- transmute(FullJoined, ESTACIO, MUNICIPI, ANY, MES, DIA, HORA = 10, VALOR = H10)
+H11 <- transmute(FullJoined, ESTACIO, MUNICIPI, ANY, MES, DIA, HORA = 11, VALOR = H11)
+H12 <- transmute(FullJoined, ESTACIO, MUNICIPI, ANY, MES, DIA, HORA = 12, VALOR = H12)
+H13 <- transmute(FullJoined, ESTACIO, MUNICIPI, ANY, MES, DIA, HORA = 13, VALOR = H13)
+H14 <- transmute(FullJoined, ESTACIO, MUNICIPI, ANY, MES, DIA, HORA = 14, VALOR = H14)
+H15 <- transmute(FullJoined, ESTACIO, MUNICIPI, ANY, MES, DIA, HORA = 15, VALOR = H15)
+H16 <- transmute(FullJoined, ESTACIO, MUNICIPI, ANY, MES, DIA, HORA = 16, VALOR = H16)
+H17 <- transmute(FullJoined, ESTACIO, MUNICIPI, ANY, MES, DIA, HORA = 17, VALOR = H17)
+H18 <- transmute(FullJoined, ESTACIO, MUNICIPI, ANY, MES, DIA, HORA = 18, VALOR = H18)
+H19 <- transmute(FullJoined, ESTACIO, MUNICIPI, ANY, MES, DIA, HORA = 19, VALOR = H19)
+H20 <- transmute(FullJoined, ESTACIO, MUNICIPI, ANY, MES, DIA, HORA = 20, VALOR = H20)
+H21 <- transmute(FullJoined, ESTACIO, MUNICIPI, ANY, MES, DIA, HORA = 21, VALOR = H21)
+H22 <- transmute(FullJoined, ESTACIO, MUNICIPI, ANY, MES, DIA, HORA = 22, VALOR = H22)
+H23 <- transmute(FullJoined, ESTACIO, MUNICIPI, ANY, MES, DIA, HORA = 23, VALOR = H23)
+H24 <- transmute(FullJoined, ESTACIO, MUNICIPI, ANY, MES, DIA, HORA = 24, VALOR = H24)
+
+#Here we join all the dataset of the H in one dataset
+
+Hours_Joining <- union(H01, H02)
+Hours_Joining <- union(Hours_Joining, H03)
+Hours_Joining <- union(Hours_Joining, H04)
+Hours_Joining <- union(Hours_Joining, H05)
+Hours_Joining <- union(Hours_Joining, H06)
+Hours_Joining <- union(Hours_Joining, H07)
+Hours_Joining <- union(Hours_Joining, H08)
+Hours_Joining <- union(Hours_Joining, H09)
+Hours_Joining <- union(Hours_Joining, H10)
+Hours_Joining <- union(Hours_Joining, H11)
+Hours_Joining <- union(Hours_Joining, H12)
+Hours_Joining <- union(Hours_Joining, H13)
+Hours_Joining <- union(Hours_Joining, H14)
+Hours_Joining <- union(Hours_Joining, H15)
+Hours_Joining <- union(Hours_Joining, H16)
+Hours_Joining <- union(Hours_Joining, H17)
+Hours_Joining <- union(Hours_Joining, H18)
+Hours_Joining <- union(Hours_Joining, H19)
+Hours_Joining <- union(Hours_Joining, H20)
+Hours_Joining <- union(Hours_Joining, H21)
+Hours_Joining <- union(Hours_Joining, H22)
+Hours_Joining <- union(Hours_Joining, H23)
+Hours_Joining <- union(Hours_Joining, H24)
+
+###Exercise 1
+#Here we do a group_by with the year, month, day and hour and then we do a summarise to sum all the values of the pollution by hour, by day and by month
+
+PollutionByHour <- Hours_Joining %>% group_by(ANY, MES, DIA, HORA) %>% 
+  summarise(Total_HORA=sum(VALOR, na.rm = TRUE),
+            .groups = 'drop')
+PollutionByDay <- Hours_Joining %>% group_by(ANY, MES, DIA) %>% 
+  summarise(Total_DIA=sum(VALOR, na.rm = TRUE),
+            .groups = 'drop')
+PollutionByMonth <- Hours_Joining %>% group_by(ANY, MES) %>% 
+  summarise(Total_MES=sum(VALOR, na.rm = TRUE),
+            .groups = 'drop')
+
+#EXERCICE 2
+
+#Here we add the csv of the quality of the air for the estacions
+AireEstacions <- read.csv("2022_qualitat_aire_estacions.csv")
+
+#Here we select the data that we will need for the exercise
+AireEsta <- select(AireEstacions, Estacio, Nom_barri, Codi_barri)
+
+#We sum all the values of the pollution levels for each ESTACIO
+PollutionByEstacio <- Hours_Joining %>% group_by(ESTACIO) %>% 
+  summarise(Total_Pollution = sum(VALOR, na.rm = TRUE), 
+            .groups = "drop")
+#We do a rename to be able to do the join
+AireEsta <- rename(AireEsta, "ESTACIO" = "Estacio")
+AireEsta <- distinct(AireEsta) #Eliminate the repited observations
+#We do a left_join of the pollution levels by ESTACIO with the data taht we selected from de csv of the quality of the air. And we joined by ESTACIO
+AireEstacions2 <- left_join(PollutionByEstacio, AireEsta, by = "ESTACIO")
+
+###
+#In the exercise 2 we add extra data because we use the same dataset to see the relationships of the exercis 2 and 3. So the code of both exercise is together, but then we analyse diferents things in the plots that we will see later
+###
+
+#Add an excel with all the population for neighborhood in Barcelona
+BarcePopu <- read_xlsx("Barcelona_population.xlsx")
+
+#We do a renamo to be able to do the join later
+BarcePopu <- rename(BarcePopu, "Codi_barri" = "Nº")
+BarcePopu <- select(BarcePopu, Codi_barri, Population) #select the necesary data
+#Make a left_join with all the data that we already have and the population
+AireEstacions2 <- left_join(AireEstacions2, BarcePopu, by = "Codi_barri")
+
+###
+
+#Here we do a similar process as before, firs we do the rename to be able to do the join, after that we select the importat data and eliminate the repited and finaly we do a left_join of all the data that we already have with the information of the trees. To link the polution levels of each neighbohood with the density of trees
+TreesPollution <- rename(Total_trees2, "Codi_barri" = "codi_barri")
+TreesPollution <- select(TreesPollution, Codi_barri, nom_barri, Trees_density)
+TreesPollution <- distinct(TreesPollution)
+TreesPollution <- left_join(AireEstacions2, TreesPollution, by = "Codi_barri")
+
+
+### END EX 2
+
+#EXERCICE 3
+
+#As I have already said the code to create the dataset withe the information of the execise 3, we already do it and puting it together in the exercise 2.
+
+### END EX 3
+
+
+######### GGPLOTS #########
+#Plot Exercise 1
+
+###Here we have a plot of points where we can see the pollution levels of each day of the year divided in 12 plots, one for each month. We use the face_wrap to separate in the 12 plots, and the xlim and the ylim to limitate the axes of the graphic.
+ggplot(PollutionByDay) +
+  geom_point(mapping = aes(x = DIA, y = Total_DIA)) +
+  geom_smooth(aes(x = DIA, y = Total_DIA)) +
+  labs(title = "The number of Pollution by 365 days during 2022") +
+  ylab("Total Pollution by Day") +
+  xlab("Day") +
+  facet_wrap(~MES, nrow = 3) + xlim(1,31) + ylim(250000,850000)
+
+###Here we divided by the hours, to see which are the hour with more pollution during the year
+ggplot(PollutionByHour)+
+  geom_point(mapping = aes(x = HORA, y = Total_HORA)) +
+  geom_smooth(aes(x = HORA, y = Total_HORA)) +
+  labs(title = "The number of Pollution by the total of hours during 2022") +
+  ylab("Total Pollution by Hour") +
+  xlab("Hours")
+
+###Here we divided a the pollution levels by the month, but the information is too general, so is better to use the first plot where you can see the 12 plots of each month
+ggplot(PollutionByMonth)+
+  geom_col(mapping = aes(x = MES, y = Total_MES)) +
+  geom_smooth(aes(x = MES, y = Total_MES)) +
+  labs(title = "The number of Pollution by the total of months during 2022") +
+  ylab("Total Pollution by Month") +
+  xlab("Month")
+
+#GGPLOT OF EXERCICE 2:
+#THE RELATIONSHIP BETWEEN TREES DENSITY ACCORDING TO THE 8 NEIGHBOHOODS USING GEOM_POINT
+
+###Here we did a plot with the pollution per neighborhood, ordered buy more to less pollution. Colored depending of the trees density of each neighborhood
+ggplot(TreesPollution) +
+  geom_point(aes(reorder(x = nom_barri,Trees_density), y = Total_Pollution, color = Trees_density))+ ylim(0,105000000)+
+  labs(title = "The impact green level in relation of total of stations") +
+  ylab("Total Pollution") +
+  xlab("Neighbourhood") +
+  coord_flip()
+
+#USING GEOM_COL
+###Here we do the same as the previous plot but in this case instead of doing it with points we did it with cols
+ggplot(TreesPollution) +
+  geom_col(aes(reorder(x = nom_barri, Trees_density), y = Total_Pollution, fill = Trees_density)) + labs(title = "The impact green level in relation of total of stations") +
+  ylab("Total Pollution") +
+  xlab("Neighbourhood") +
+  coord_flip() + ylim(0,105000000)
+
+#Plot Exercise 3
+###Here we did a plot with the name of the neighborhood and the total of pollution, and we colored by the number of population and ordered by the level of pollution. We also add the number of the population for each neighborhood.
+ggplot(TreesPollution, aes(reorder(x = nom_barri, Total_Pollution), y = Total_Pollution, color = Population))+
+  geom_point()+
+  geom_text(aes(label=Population),hjust=0.45, vjust=-0.8, size = 2.45) +
+  labs(title = "Order neighborhoods from less polluted to more polluted") +
+  ylab("Total Pollution") +
+  xlab("Neighbourhood") +
+  coord_flip()
+
+
+
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
