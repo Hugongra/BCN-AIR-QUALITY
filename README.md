@@ -88,7 +88,7 @@ This project focuses on several key areas of analysis:
 
 
 
-## # Setup
+## Setup
 **Clone the repository**:
 ```bash
    git clone git clone https://github.com/Hugongra/BCN-AIR-QUALITY.git
